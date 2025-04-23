@@ -1,0 +1,16 @@
+/.vscode
+/.idea
+/.history
+/.DS_Store
+/.git
+/.gitignore
+/.github
+/.gitlab-ci.yml
+/.gitlab-ci
+/node_modules
+/.dist  
+
+*.env
+.env
+*.env.*
+*.log
