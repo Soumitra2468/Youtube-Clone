@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/Soumitra2468/Youtube-Clone#readme",
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "prettier": "3.5.3"
   },
   "dependencies": {
     "express": "^5.1.0"
