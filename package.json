@@ -1,0 +1,29 @@
+{
+  "name": "youtube-clone",
+  "version": "1.0.0",
+  "description": "This is a youtube clone app",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Soumitra2468/Youtube-Clone.git"
+  },
+  "keywords": [
+    "javascript",
+    "backend"
+  ],
+  "author": "Soumitra Samanta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Soumitra2468/Youtube-Clone/issues"
+  },
+  "homepage": "https://github.com/Soumitra2468/Youtube-Clone#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
