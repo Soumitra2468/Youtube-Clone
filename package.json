@@ -1,10 +1,12 @@
 {
   "name": "youtube-clone",
   "version": "1.0.0",
-  "description": "This is a youtube clone app",
-  "main": "index.js",
+  "description": "This is a YouTube clone app",
+  "main": "src/index.js",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon -r dotenv/config --experimental-json-modules src/index.js",
+    "start": "node -r dotenv/config src/index.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +27,8 @@
     "prettier": "3.5.3"
   },
   "dependencies": {
-    "express": "^5.1.0"
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.13.3"
   }
 }
