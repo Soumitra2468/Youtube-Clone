@@ -13,4 +13,6 @@ class ApiResponse {
   static error(message, data) {
     return new ApiResponse(500, message, data);
   }
-}       
+}
+
+export { ApiResponse };

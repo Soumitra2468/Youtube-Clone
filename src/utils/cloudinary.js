@@ -1,6 +1,4 @@
 import {v2 as cloudinary} from 'cloudinary';
-import { log } from 'console';
-import e from 'express';
 import fs from 'fs';
 
 
@@ -18,7 +16,15 @@ const uploadImage = async (filePath) => {
         const result = await cloudinary.uploader.upload(filePath, {
             resource_type: 'auto'
         });
-        console.log('Image uploaded to Cloudinary:', result.secure_url);
+        fs.unlinkSync(filePath, (err) => {
+            // Delete the file after successful upload
+            if (err) {
+                console.error('Error deleting file:', err);
+            } else {
+                console.log('File deleted successfully');
+            }
+        });
+        // Return the secure URL of the uploaded image
         return result.secure_url;
     } catch (error) {
        fs.unlinkSync(filePath, (err) => {
