@@ -190,5 +190,133 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
         throw new ApiError("Invalid refresh token", 401);
         
     }
-})           
-export {registerUser, loginUser,logoutUser, refreshAccessToken};
+})
+//change user password
+const changePassword = asyncHandler(async (req, res) => {
+    //get user id from the request
+    const userId = req.user._id;
+    //get user details from body
+    const {oldPassword, newPassword} = req.body;
+    //check if user details are provided
+    if (!oldPassword || !newPassword) {
+        throw new ApiError("Old password and new password are required", 400);
+    }
+    //find user by id
+    const user = await User.findById(userId);
+    if (!user) {
+        throw new ApiError("User not found", 404);
+    }
+    //compare old password with the one in the database
+    const isPasswordValid = await user.comparePassword(oldPassword);
+    if (!isPasswordValid) {
+        throw new ApiError("Invalid old password", 401);
+    }
+    //update password in the database
+    user.password = newPassword;
+    await user.save({ validateBeforeSave: false });  
+    //send response to the frontend
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200, 
+                "Password changed successfully", 
+                {}
+            ));
+})
+//get current user
+const getCurrentUser = asyncHandler(async (req, res) => {
+    //get user id from the request
+    const userId = req.user._id;
+    //find user by id
+    const user = await User.findById(userId).select("-password -createdAt -updatedAt -refreshToken");
+    if (!user) {
+        throw new ApiError("User not found", 404);
+    }
+    //send response to the frontend
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200, 
+                "User fetched successfully", 
+                {user}
+            ));
+})
+//update user profile
+const updateUserProfile = asyncHandler(async (req, res) => {
+    //get user id from the request
+    const userId = req.user._id;
+    //get user details from body
+    const {fullname, email} = req.body;
+    //check if user details are provided
+    if (!fullname || !email) {
+        throw new ApiError("Fullname and email are required", 400);
+    }
+    //find user by id
+    const user = await User.findByIdAndUpdate(
+        userId, 
+        {
+            $set: {
+                fullname,
+                email: email.toLowerCase(),
+            }
+        }, 
+        {new: true}).select("-password -createdAt -updatedAt -refreshToken");
+    if (!user) {
+        throw new ApiError("User not found", 404);
+    }
+    //respond to the frontend
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200, 
+                "User profile updated successfully", 
+                {user}
+            ));
+})
+//update user avatar and cover image
+const updateUserAvatarAndCoverImage = asyncHandler(async (req, res) => {
+    //get user id from the request
+    const userId = req.user._id;
+    //avatar and cover image are required
+    const avatarLocalPath =  req.files?.avatar[0]?.path
+    const coverImageLocalPath = req.files?.coverImage[0]?.path
+    if(!avatarLocalPath && !coverImageLocalPath ){
+        throw new ApiError("Avatar and cover image are required", 400);
+    }
+    //upload avatar image to cloudinary
+    let avatar, coverImage;
+    if(avatarLocalPath){
+        avatar = await uploadImage(avatarLocalPath);
+    }
+    //upload cover image to cloudinary
+    if(coverImageLocalPath){
+        coverImage = await uploadImage(coverImageLocalPath);
+    }
+    // find user by id and update avatar and cover image in the database
+    const user = await User.findByIdAndUpdate(
+        userId, 
+        {
+            $set: {
+                avatar: avatar?.url || undefined,
+                coverImage: coverImage?.url || undefined,
+            }
+        }, 
+        {new: true}).select("-password -createdAt -updatedAt -refreshToken");
+    if (!user) {
+        throw new ApiError("User not found", 404);
+    }
+    //respond to the frontend
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200, 
+                "User avatar and cover image updated successfully", 
+                {user}
+            ));
+})
+
+export {registerUser, loginUser,logoutUser, refreshAccessToken, changePassword, getCurrentUser, updateUserProfile, updateUserAvatarAndCoverImage};
