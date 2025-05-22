@@ -1,48 +1,46 @@
-import mongoose, {Schema} from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 
-const videoSchema = new Schema({
+const videoSchema = new Schema(
+  {
     videoFile: {
-        type: String, //cloudinary url
-        required: [true, "Video file is required"],
+      type: String, //cloudinary url
+      required: true,
     },
     thumbnail: {
-        type: String, //cloudinary url
-        required: [true, "Thumbnail is required"],
+      type: String, //cloudinary url
+      required: true,
     },
     title: {
-        type: String,
-        required: [true, "Title is required"],
+      type: String,
+      required: true,
     },
     description: {
-        type: String,
-        required: [true, "Description is required"],   
+      type: String,
+      required: true,
     },
     duration: {
-        type: Number,
-        required: [true, "Duration is required"],
+      type: Number,
+      required: true,
     },
     views: {
-        type: Number,
-        default: 0,
+      type: Number,
+      default: 0,
     },
-    isPublic: {
-        type: Boolean,
-        default: true,
+    isPublished: {
+      type: Boolean,
+      default: true,
     },
     owner: {
-        type: Schema.Types.ObjectId,
-        ref: "User",
-        required: [true, "Owner is required"],
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
-    likes: {
-        type: [Schema.Types.ObjectId],
-        ref: "User",
-    },
-}, {
-    timestamps: true,   // Automatically add createdAt and updatedAt fields   
-});
+  },
+  {
+    timestamps: true,
+  }
+);
 
-videoSchema.plugin(mongooseAggregatePaginate); // Add pagination plugin to the schema
+videoSchema.plugin(mongooseAggregatePaginate);
+
 export const Video = mongoose.model("Video", videoSchema);
-// videoSchema.index({ title: "text", description: "text" }); // Create a text index on title and description fields
